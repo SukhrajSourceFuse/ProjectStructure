@@ -12,24 +12,19 @@ namespace WebAPIApplication.Controllers
     public class HomeController : ControllerBase
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IConfiguration _configuration;
         private readonly ITokenProvider _tokenProvider;
-        private readonly IAuthorizationService _authorizationService;
 
-        public HomeController(ILogger<HomeController> logger, IConfiguration configuration, ITokenProvider tokenProvider, IAuthorizationService authorizationService)
+        public HomeController(ILogger<HomeController> logger, ITokenProvider tokenProvider)
         {
             _logger = logger;
-            _configuration = configuration;
             _tokenProvider = tokenProvider;
         }
 
-        [HttpGet(Name = "GetWeatherForecast")]
+        [HttpGet(Name = "Protected")]
         [Authorize]
         public IActionResult Get()
         {
-            _logger.LogInformation("GetWeatherForecast Information");
-            _logger.LogWarning("GetWeatherForecast Warning");
-            _logger.LogError("GetWeatherForecast Error");
+            _logger.LogInformation("Protected action method");
             return Ok("Token Authorizations Successfull");
         }
 
@@ -37,12 +32,16 @@ namespace WebAPIApplication.Controllers
         [Route("Login")]
         public IActionResult Login()
         {
+            _logger.LogInformation("Direct Login action method");
+
             return Ok(_tokenProvider.CreateToken(HttpContext.User, false,HttpContext.Request.Host.Value));
         }
 
         [HttpGet("signinwithgoogle")]
         public IActionResult SignInwithGoogle()
         {
+            _logger.LogInformation("Login with Google Authentication");
+
             try
             {
                 var redirectUrl = Url.Action("CallBack", "Auth");
@@ -55,7 +54,7 @@ namespace WebAPIApplication.Controllers
             }
             catch (Exception ex)
             {
-                var result = ex;
+            _logger.LogError($"Exception - {ex.Message}");
                 throw;
             }
 
@@ -68,16 +67,13 @@ namespace WebAPIApplication.Controllers
             if (authResult.Succeeded)
             {
                 var emailClaim = authResult.Principal.FindFirst(ClaimTypes.Email);
-                var email = emailClaim.Value; // Retrieve the user's email address from the authentication result
-
-                // Use the email address to sign the user in to your application
-                // ...
-
-                return RedirectToAction("Index", "Home");
+                var email = emailClaim?.Value; // Retrieve the user's email address from the authentication result
+                //Other Logic
+                return RedirectToAction("LoggerTest", "Home");
             }
             else
             {
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Login", "Home");
             }
         }
 
@@ -85,11 +81,23 @@ namespace WebAPIApplication.Controllers
         [Route("LoggerTest")]
         public IActionResult LoggerTest()
         {
-            _logger.LogInformation("GetWeatherForecast DataBase");
-            _logger.LogWarning("GetWeatherForecast DataBase");
-            _logger.LogError("GetWeatherForecast DataBase");
-
-            return Ok(true);
+            try
+            {
+                int b = 0;
+                var s = 7 / b;
+                // Serilog.Debugging.SelfLog.Enable(msg => Console.WriteLine(msg)); This is used to check exception of serilog
+                _logger.LogInformation("Logger Test- Information");
+                _logger.LogWarning("Logger Test- Warnig");
+                _logger.LogError("Logger Test- Error");
+                _logger.LogTrace("Logger Test- Trace");
+                return Ok("Logging Tested");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Logging Failed - {ex.Message}");
+                return Ok("Logging Failed");
+            }
+          
         }
     }
 }

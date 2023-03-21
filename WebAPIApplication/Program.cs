@@ -1,6 +1,5 @@
 using Serilog;
 using WebAPIApplication.Configurations;
-using WebAPIApplication.Security;
 
 namespace WebAPIApplication
 {
@@ -14,9 +13,14 @@ namespace WebAPIApplication
                 builder.Host.UseSerilog();
                 // Add services to the container.
                 IConfigurationRoot configuration = new ConfigurationBuilder().AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: false).Build();
+
+                // AddApplicationLogging is the extension method for logging.
                 builder.Logging.AddApplicationLogging(configuration);
 
+                // AddAppSettingsModule is the extension method for reading the Security configuration from configuration file.
                 builder.Services.AddAppSettingsModule(configuration);
+
+                // AddSecurityModule is the extension method for implemenating the Authentication middleware.
                 builder.Services.AddSecurityModule();
 
                 builder.Services.AddControllers();

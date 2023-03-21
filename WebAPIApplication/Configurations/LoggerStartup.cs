@@ -1,8 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-using Serilog;
-using System.Configuration;
-using System.Security.Authentication;
-using WebAPIApplication.Security;
+﻿using Serilog;
 
 namespace WebAPIApplication.Configurations
 {

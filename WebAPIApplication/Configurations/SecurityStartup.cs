@@ -4,8 +4,9 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using WebAPIApplication.Security;
 
-namespace WebAPIApplication.Security
+namespace WebAPIApplication.Configurations
 {
     public static class SecurityStartup
     {
@@ -13,15 +14,12 @@ namespace WebAPIApplication.Security
 
         public static IServiceCollection AddSecurityModule(this IServiceCollection services)
         {
-            //TODO Retrieve the signing key properly (DRY with TokenProvider)
             var opt = services.BuildServiceProvider().GetRequiredService<IOptions<SecuritySettings>>();
+
             var securitySettings = opt.Value;
             var secret = securitySettings.Jwt.SecretKey;
 
             byte[] keyBytes = Encoding.UTF8.GetBytes(securitySettings.Jwt.SecretKey);
-
-           // JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
-
 
             services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

@@ -1,4 +1,6 @@
-﻿namespace WebAPIApplication.Security
+﻿using WebAPIApplication.Security;
+
+namespace WebAPIApplication.Configurations
 {
     public static class AppSettingsConfiguration
     {
