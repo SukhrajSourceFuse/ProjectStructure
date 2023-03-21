@@ -12,7 +12,7 @@ namespace WebAPIApplication
                 var builder = WebApplication.CreateBuilder(args);
                 builder.Host.UseSerilog();
                 // Add services to the container.
-                IConfigurationRoot configuration = new ConfigurationBuilder().AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: false).Build();
+                IConfigurationRoot configuration = new ConfigurationBuilder().AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: false,reloadOnChange:true).Build();
 
                 // AddApplicationLogging is the extension method for logging.
                 builder.Logging.AddApplicationLogging(configuration);
