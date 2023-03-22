@@ -83,6 +83,7 @@ namespace WebAPIApplication.Controllers
         {
             try
             {
+
                 int b = 0;
                 var s = 7 / b;
                 // Serilog.Debugging.SelfLog.Enable(msg => Console.WriteLine(msg)); This is used to check exception of serilog
@@ -94,7 +95,7 @@ namespace WebAPIApplication.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Logging Failed - {ex.Message}");
+                _logger.LogError(ex,$"Eroor - {ex.Message}");
                 return Ok("Logging Failed");
             }
           
