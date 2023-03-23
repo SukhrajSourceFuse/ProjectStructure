@@ -23,6 +23,7 @@ namespace WebAPIApplication
                 // AddSecurityModule is the extension method for implemenating the Authentication middleware.
                 builder.Services.AddSecurityModule();
 
+                builder.Services.AddHealthChecks();
                 builder.Services.AddControllers();
                 builder.Services.AddEndpointsApiExplorer();
                 builder.Services.AddSwaggerGen();
@@ -39,6 +40,8 @@ namespace WebAPIApplication
                 app.UseApplicationSecurity();
 
                 app.MapControllers();
+                app.MapHealthChecks("/health");
+
 
                 app.Run();
             }

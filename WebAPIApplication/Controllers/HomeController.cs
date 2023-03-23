@@ -95,7 +95,7 @@ namespace WebAPIApplication.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex,$"Eroor - {ex.Message}");
+                _logger.LogError(ex,$"Error - {ex.Message}");
                 return Ok("Logging Failed");
             }
           
